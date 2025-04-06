@@ -25,24 +25,34 @@ const gameBoard = {
 
   checkWin: function (player) {
     currentBoard = this.analyseBoard(player);
-    console.log(currentBoard);
+
     const winningCombinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8],
                                  [0, 3, 6], [1, 4, 7], [2, 5, 8],
                                  [0, 4, 8], [2, 4, 6]]; 
-    for (let i = 0; i < winningCombinations.length; i++) 
+
+    for (let i = 0; i < winningCombinations.length; i++){
+      let matches = 0;
       for (let j = 0; j <= 2; j++){
-        if (winningCombinations[i][j] === currentBoard[j] && j === 2){
-          gameController.isOn = false; 
-          this.animateWin(currentBoard);
-          player.won++;
-          gameController.gameCount++;
-          return true;
+        for (let k = 0; k < currentBoard.length; k++) {
+
+          if (winningCombinations[i][j] === currentBoard[k]) {
+         
+            matches++;
+
+          }
+
+          if (matches === 3) {gameController.isOn = false;
+            this.animateWin(winningCombinations[i]);
+            player.won++;
+            gameController.gameCount++;
+            return true;}
+            
         }
-        else if (winningCombinations[i][j] !== currentBoard[j])
-          break;
       }
-      return false;
-    },
+    
+    }
+    return false;
+  },
   
 
   checkDraw: function () {
@@ -66,7 +76,6 @@ const gameBoard = {
     if (!this.consoleBoard[position]) {
       this.consoleBoard[position] = mark;
       this.loadBoard(position, mark);
-      console.log(this.checkWin(player));
     if (this.checkWin(player)) 
       console.log (`${player.name} won`);
     else if (this.checkDraw())
@@ -133,7 +142,7 @@ const gameController = {
     document.querySelector('body>section div:nth-child(1)').textContent = `X won ${player1.won} games`;
     document.querySelector('body>section div:nth-child(2)').textContent = `0 won ${player2.won} games`;
     this.isOn = true; 
-    if (this.gameCount % 2 == 0) {
+    if (this.gameCount % 2 === 0) {
       player1.mark = '0';
       player2.mark = 'X';
     } else {
