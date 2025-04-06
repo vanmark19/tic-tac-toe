@@ -38,19 +38,19 @@ main section {
 }
 
 main .first-row, main .second-row{
-  border-bottom: 0.25rem whitesmoke solid;
+  border-bottom: 0.5rem whitesmoke solid;
 }
 
 main .first-column, main .second-column {
-  border-right: 0.25rem solid whitesmoke;
+  border-right: 0.5rem solid whitesmoke;
 }
 
 main .second-row, main .third-row {
-  border-top: 0.25rem solid whitesmoke;
+  border-top: 0.5rem solid whitesmoke;
 }
 
 main .second-column, main .third-column {
-  border-left: 0.25rem solid whitesmoke;
+  border-left: 0.5rem solid whitesmoke;
 }
 
 main>section div:hover {
@@ -73,10 +73,23 @@ main>section div {
   justify-content: center;
 }
 
-.won, .won:hover{
+.won{
   background-color: rgb(5, 226, 5);
-  transform: scale(1.05);
+
   transition: all, 0.4s;
+}
+
+.won:hover {
+  transform: scale(1.05);
+}
+
+.draw {
+  background-color: #dad709;
+  transition: all, 0.4s;
+}
+
+.draw:hover {
+  transform: scale(1.05);
 }
 
 body>section {
@@ -113,4 +126,25 @@ h2{
   margin-right: 26rem;
 }
 
+.circle {
+  transform: rotateZ(-90deg);
+  transform-origin: center;
+  stroke-dasharray:142;
+  stroke-dashoffset: 142;
+  animation: draw 0.5s ease-in-out forwards;
+}
+.line{
+  transform: scale(1.6) rotateZ(180deg);  
+  transform-origin: center;
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  stroke: white;
+  animation: draw 0.5s ease-in-out forwards;
+}
 
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

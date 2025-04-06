@@ -8,7 +8,21 @@ const gameBoard = {
            "", "", ""],
 
    loadBoard: function (position, mark) {
-    this.board[position].innerHTML = mark; 
+    if (mark === "X")
+      this.board[position].innerHTML = `<svg width="80" height="80" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g id="Frame 1">
+      <line class="line" x1="14" y1="36.6274" x2="36.6274" y2="14" stroke="black" stroke-width="8" stroke-linecap="round"/>
+      <line class="line" x1="36.6274" y1="36.6274" x2="14" y2="14" stroke="black" stroke-width="8" stroke-linecap="round"/>
+      </g>
+      </svg>
+      `; 
+    else  
+      this.board[position].innerHTML = `<svg width="80" height="80" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g id="Frame 1">
+      <circle class="circle" cx="24.5" cy="24.5" r="18.5" stroke="white" stroke-width="8"/>
+      </g>
+      </svg>`;
+
     console.log(this.consoleBoard);
    },
 
@@ -42,9 +56,8 @@ const gameBoard = {
           }
 
           if (matches === 3) {gameController.isOn = false;
-            this.animateWin(winningCombinations[i]);
+            this.animateWin(winningCombinations[i], player);
             player.won++;
-            gameController.gameCount++;
             return true;}
             
         }
@@ -61,7 +74,7 @@ const gameBoard = {
         return false;
     }
     gameController.isOn = false;
-    gameController.gameCount++;
+    this.animateDraw();
     return true;
   },
 
@@ -76,10 +89,12 @@ const gameBoard = {
     if (!this.consoleBoard[position]) {
       this.consoleBoard[position] = mark;
       this.loadBoard(position, mark);
-    if (this.checkWin(player)) 
+    if (this.checkWin(player)){
       console.log (`${player.name} won`);
-    else if (this.checkDraw())
+      return;}
+    else if (this.checkDraw()){ 
       console.log("It's a draw");
+      return;}
     gameController.changeTurn();
     }
     else 
@@ -91,12 +106,18 @@ const gameBoard = {
     
   },
 
-  animateWin: function (combination) {
+  animateWin: function (combination, player) {
     for (let i = 0; i <= 2; i++)
       this.board[combination[i]].classList.add('won');
-  }
+      document.querySelector('h2').textContent = `${player.name.charAt(0).toUpperCase()+player.name.slice(1)} won`;
 
-  
+  },
+
+  animateDraw: function () {
+    for (let i = 0; i <= 8; i++)
+      this.board[i].classList.add('draw');
+      document.querySelector('h2').textContent = `It's a draw`;
+  }
 }
 
 
@@ -129,6 +150,7 @@ const gameController = {
     }
   },
   resetGame: function () {
+    this.changeTurn();
     this.currentPlayer = player1;
     this.roundCount = 1;
     gameBoard.consoleBoard = ["", "", "",
@@ -138,6 +160,8 @@ const gameController = {
       gameBoard.board[i].textContent = '';
       if (gameBoard.board[i].classList.contains('won'))
         gameBoard.board[i].classList.remove('won');
+      if (gameBoard.board[i].classList.contains('draw'))
+        gameBoard.board[i].classList.remove('draw');
     }
     document.querySelector('body>section div:nth-child(1)').textContent = `X won ${player1.won} games`;
     document.querySelector('body>section div:nth-child(2)').textContent = `0 won ${player2.won} games`;
